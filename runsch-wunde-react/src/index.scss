@@ -25,3 +25,39 @@
 .vcentered > * {
   vertical-align: middle;
 }
+
+p.text-placeholder {
+  width: calc(var(--length, 20) * 1.1ch);
+
+  &::before {
+    @extend .loading;
+
+    content: '';
+
+    display: inline-block;
+    width: 100%;
+    height: 1em;
+    vertical-align: middle;
+  }
+}
+
+.loading {
+  background-image: linear-gradient(
+    to right,
+    $grey-lightest 20%,
+    $grey-lighter 40%,
+    $grey-lightest 60%
+  );
+  background-size: 1300px;
+
+  animation: loading 2s linear infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: -650px;
+  }
+  100% {
+    background-position: 650px;
+  }
+}

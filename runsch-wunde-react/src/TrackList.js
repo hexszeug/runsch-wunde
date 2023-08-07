@@ -2,7 +2,7 @@ const TrackList = ({ tracks }) => {
   return (
     <div>
       {tracks.map((track) => (
-        <Track track={track} key={track.id} />
+        <Track track={track} key={track?.id} />
       ))}
     </div>
   );
@@ -27,6 +27,7 @@ const Track = ({ track }) => {
           <TrackRelease track={track} />
         </div>
         <div className="column is-narrow is-hidden-touch">
+          <div style={{ width: '6ch' }} />
           <TrackDuration track={track} />
         </div>
       </div>
@@ -35,21 +36,31 @@ const Track = ({ track }) => {
 };
 
 const TrackCover = ({ track }) => {
+  if (!track)
+    return (
+      <div className="image is-48x48">
+        <div className="loading" style={{ height: '100%' }} />
+      </div>
+    );
   const url = track?.album.images.find((image) => image.width <= 64)?.url;
   return (
     <div className="image is-48x48">
-      <img
-        className="cover"
-        src={url}
-        alt={`Album cover of ${track.album.name}`}
-        title={track.album.name}
-        draggable="false"
-      />
+      {track && (
+        <img
+          className="cover"
+          src={url}
+          alt={`Album cover of ${track.album.name}`}
+          title={track.album.name}
+          draggable="false"
+        />
+      )}
     </div>
   );
 };
 
 const TrackName = ({ track }) => {
+  if (!track)
+    return <p className="text-placeholder" style={{ '--length': 23 }} />;
   return (
     <p className="ellipsis" title={track.name}>
       <b>{track.name}</b>
@@ -70,6 +81,8 @@ const TrackExplicity = ({ track }) => {
 };
 
 const TrackArtists = ({ track }) => {
+  if (!track)
+    return <p className="text-placeholder" style={{ '--length': 18 }} />;
   const artists = track.artists.map((artist) => artist.name).join(', ');
   return (
     <span className="ellipsis" title={artists}>
@@ -79,6 +92,8 @@ const TrackArtists = ({ track }) => {
 };
 
 const TrackAlbum = ({ track }) => {
+  if (!track)
+    return <p className="text-placeholder" style={{ '--length': 25 }} />;
   return (
     <p className="ellipsis" title={track.album.name}>
       {track.album.name}
@@ -87,6 +102,8 @@ const TrackAlbum = ({ track }) => {
 };
 
 const TrackRelease = ({ track }) => {
+  if (!track)
+    return <p className="text-placeholder" style={{ '--length': 4 }} />;
   const year = new Date(track.album.release_date).getFullYear();
   return (
     <p className="has-text-grey ellipsis" title={year}>
@@ -96,6 +113,8 @@ const TrackRelease = ({ track }) => {
 };
 
 const TrackDuration = ({ track }) => {
+  if (!track)
+    return <p className="text-placeholder ml-auto" style={{ '--length': 4 }} />;
   const dur = new Date(track.duration_ms);
   return (
     <p className="has-text-right">

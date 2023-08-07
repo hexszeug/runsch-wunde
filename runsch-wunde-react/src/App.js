@@ -12,7 +12,7 @@ function App() {
             <input className="input" type="text" placeholder="Typing..." />
           </div>
         </div>
-        <TrackList tracks={testData} />
+        <TrackList tracks={testData.concat(null)} />
         <div className="columns">
           <div className="column">
             <button className="button is-primary">Primary</button>
