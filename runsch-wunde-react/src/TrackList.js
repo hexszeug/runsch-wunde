@@ -1,3 +1,7 @@
+import { createContext, useContext } from 'react';
+
+const TrackContext = createContext(null);
+
 const TrackList = ({ tracks }) => {
   return (
     <div>
@@ -10,32 +14,35 @@ const TrackList = ({ tracks }) => {
 
 const Track = ({ track }) => {
   return (
-    <div className="hoverable p-3 is-clickable is-unselectable">
-      <div className="columns is-vcentered is-mobile">
-        <div className="column is-narrow">
-          <TrackCover track={track} />
-        </div>
-        <div className="column is-clipped">
-          <TrackName track={track} />
-          <p className="vcentered">
-            <TrackExplicity track={track} />
-            <TrackArtists track={track} />
-          </p>
-        </div>
-        <div className="column is-clipped is-hidden-mobile">
-          <TrackAlbum track={track} />
-          <TrackRelease track={track} />
-        </div>
-        <div className="column is-narrow is-hidden-touch">
-          <div style={{ width: '6ch' }} />
-          <TrackDuration track={track} />
+    <TrackContext.Provider value={track}>
+      <div className="hoverable p-3 is-clickable is-unselectable">
+        <div className="columns is-vcentered is-mobile">
+          <div className="column is-narrow">
+            <TrackCover />
+          </div>
+          <div className="column is-clipped">
+            <TrackName />
+            <p className="vcentered">
+              <TrackExplicity />
+              <TrackArtists />
+            </p>
+          </div>
+          <div className="column is-clipped is-hidden-mobile">
+            <TrackAlbum />
+            <TrackRelease />
+          </div>
+          <div className="column is-narrow is-hidden-touch">
+            <div style={{ width: '6ch' }} />
+            <TrackDuration />
+          </div>
         </div>
       </div>
-    </div>
+    </TrackContext.Provider>
   );
 };
 
-const TrackCover = ({ track }) => {
+const TrackCover = () => {
+  const track = useContext(TrackContext);
   if (!track)
     return (
       <div className="image is-48x48">
@@ -58,7 +65,8 @@ const TrackCover = ({ track }) => {
   );
 };
 
-const TrackName = ({ track }) => {
+const TrackName = () => {
+  const track = useContext(TrackContext);
   if (!track)
     return <p className="text-placeholder" style={{ '--length': 23 }} />;
   return (
@@ -68,7 +76,8 @@ const TrackName = ({ track }) => {
   );
 };
 
-const TrackExplicity = ({ track }) => {
+const TrackExplicity = () => {
+  const track = useContext(TrackContext);
   if (!track?.explicit) return;
   return (
     <>
@@ -80,7 +89,8 @@ const TrackExplicity = ({ track }) => {
   );
 };
 
-const TrackArtists = ({ track }) => {
+const TrackArtists = () => {
+  const track = useContext(TrackContext);
   if (!track)
     return <p className="text-placeholder" style={{ '--length': 18 }} />;
   const artists = track.artists.map((artist) => artist.name).join(', ');
@@ -91,7 +101,8 @@ const TrackArtists = ({ track }) => {
   );
 };
 
-const TrackAlbum = ({ track }) => {
+const TrackAlbum = () => {
+  const track = useContext(TrackContext);
   if (!track)
     return <p className="text-placeholder" style={{ '--length': 25 }} />;
   return (
@@ -101,7 +112,8 @@ const TrackAlbum = ({ track }) => {
   );
 };
 
-const TrackRelease = ({ track }) => {
+const TrackRelease = () => {
+  const track = useContext(TrackContext);
   if (!track)
     return <p className="text-placeholder" style={{ '--length': 4 }} />;
   const year = new Date(track.album.release_date).getFullYear();
@@ -112,7 +124,8 @@ const TrackRelease = ({ track }) => {
   );
 };
 
-const TrackDuration = ({ track }) => {
+const TrackDuration = () => {
+  const track = useContext(TrackContext);
   if (!track)
     return <p className="text-placeholder ml-auto" style={{ '--length': 4 }} />;
   const dur = new Date(track.duration_ms);
