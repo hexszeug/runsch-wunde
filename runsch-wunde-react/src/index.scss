@@ -1,22 +1,27 @@
 @charset "utf-8";
 
-$spotify-green: hsl(141, 73%, 42%);
-$spotify-black: hsl(0, 20%, 10%);
-$spotify-white: hsl(0, 0%, 100%);
+@import 'variables';
 
-$white: $spotify-white;
-$black: hsl(0, 20%, 4%);
-$black-bis: hsl(0, 20%, 7%);
-$black-ter: $spotify-black;
-$grey: hsl(0, 0%, 48%);
-$grey-lighter: hsl(0, 0%, 86%);
-$green: $spotify-green;
+//todo import only the bulma parts needed
+@import '~bulma/bulma';
 
-$primary: $green;
-$link: $black-ter;
-$info: $grey-lighter;
-$danger: $grey;
+.hoverable {
+  &:hover {
+    background-color: $white-ter;
+  }
+}
 
-$family-sans-serif: sans-serif, 'Helvetica Neue', 'Helvetica', 'Arial';
+.image img.cover {
+  object-fit: cover;
+  height: 100%;
+}
 
-@import '../node_modules/bulma/bulma.sass';
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vcentered > * {
+  vertical-align: middle;
+}

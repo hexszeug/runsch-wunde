@@ -1,13 +1,10 @@
 import './App.scss';
+import TrackList from './TrackList';
+import testData from './testData';
 
 function App() {
   return (
     <>
-      <div className="hero is-medium">
-        <div className="hero-body">
-          <h1 className="title">Hello World</h1>
-        </div>
-      </div>
       <div className="container">
         <div className="field">
           <label className="label">Search</label>
@@ -15,6 +12,7 @@ function App() {
             <input className="input" type="text" placeholder="Typing..." />
           </div>
         </div>
+        <TrackList tracks={testData} />
         <div className="columns">
           <div className="column">
             <button className="button is-primary">Primary</button>

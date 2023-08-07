@@ -1,0 +1,22 @@
+@charset 'utf-8';
+
+$spotify-green: hsl(141, 73%, 42%);
+$spotify-black: hsl(0, 20%, 10%);
+$spotify-white: hsl(0, 0%, 100%);
+
+$white: $spotify-white;
+$black: hsl(0, 20%, 4%);
+$black-bis: hsl(0, 20%, 7%);
+$black-ter: $spotify-black;
+$grey: hsl(0, 0%, 48%);
+$grey-lighter: hsl(0, 0%, 86%);
+$green: $spotify-green;
+
+$primary: $green;
+$link: $black-ter;
+$info: $grey-lighter;
+$danger: $grey;
+
+$family-sans-serif: sans-serif, 'Helvetica Neue', 'Helvetica', 'Arial';
+
+@import '~bulma/sass/utilities/all';
