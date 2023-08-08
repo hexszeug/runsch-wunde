@@ -11,12 +11,41 @@
   }
 }
 
-.image img.cover {
+.full-overlay {
+  @extend %overlay;
+  position: fixed;
+  overflow: hidden;
+
+  background-color: $body-background-color;
+  z-index: 1000;
+}
+
+.image.responsive-cover {
+  @extend .cover;
+
+  aspect-ratio: 1;
+
+  width: 450px;
+
+  @include widescreen {
+    width: 640px;
+  }
+
+  @include touch {
+    width: min(300px, 100%);
+  }
+
+  @media screen and (max-height: 499px) {
+    display: none;
+  }
+}
+
+.image.cover img {
   object-fit: cover;
   height: 100%;
 }
 
-.image img.hide-alt {
+img.hide-alt {
   color: transparent;
   user-select: none;
 }

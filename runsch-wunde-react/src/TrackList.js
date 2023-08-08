@@ -45,10 +45,10 @@ const TrackCover = () => {
   const track = useContext(TrackContext);
   const url = track?.album.images.find((image) => image.width <= 64)?.url;
   return (
-    <div className="image is-48x48">
+    <div className="image cover is-48x48">
       {track ? (
         <img
-          className="cover loading hide-alt"
+          className="loading hide-alt"
           src={url}
           alt={`Album cover of ${track.album.name}`}
           title={track.album.name}
