@@ -1,11 +1,15 @@
 import TrackAdded from './TrackAdded';
 import TrackList from './TrackList';
-import testData from './testData';
+import { testList, testPlayback } from './testData';
 
 function App() {
   return (
     <>
-      <TrackAdded track={testData[0]} />
+      <TrackAdded
+        track={testList[0]}
+        queue={testList}
+        playback={testPlayback}
+      />
       <div className="container">
         <div className="field">
           <label className="label">Search</label>
@@ -13,7 +17,7 @@ function App() {
             <input className="input" type="text" placeholder="Typing..." />
           </div>
         </div>
-        <TrackList tracks={testData.concat(null)} />
+        <TrackList tracks={testList.concat(null)} />
       </div>
     </>
   );

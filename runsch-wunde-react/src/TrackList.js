@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { msToHMS } from './time';
 
 const TrackContext = createContext(null);
 
@@ -17,7 +18,11 @@ const TrackList = ({ tracks }) => {
 const Track = ({ track }) => {
   return (
     <TrackContext.Provider value={track}>
-      <div className="hoverable p-3 is-clickable is-unselectable">
+      <div
+        className={`hoverable p-3 is-unselectable ${
+          track ? 'is-clickable' : ''
+        }`}
+      >
         <div className="columns is-vcentered is-mobile">
           <div className="column is-narrow">
             <TrackCover />
@@ -171,12 +176,7 @@ const TrackDuration = () => {
         style={{ '--length': 4 }}
       />
     );
-  const dur = new Date(track.duration_ms);
-  return (
-    <p className="has-text-right">
-      {dur.getMinutes()}:{dur.getSeconds().toString().padStart(2, '0')}
-    </p>
-  );
+  return <p className="has-text-right">{msToHMS(track.duration_ms)}</p>;
 };
 
 export default TrackList;
