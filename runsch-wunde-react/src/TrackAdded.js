@@ -38,7 +38,7 @@ const TrackAdded = ({ track }) => {
           playing in <b>{'15:21'}</b>
         </p>
         <p className="has-text-centered is-size-5 is-size-3-widescreen">
-          <b>{track.name}</b> alredy
+          <b>{track.name}</b> already
           <br />
           in <b>{4}th place</b> in the queue,
           <br />
