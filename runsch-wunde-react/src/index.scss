@@ -16,6 +16,11 @@
   height: 100%;
 }
 
+.image img.hide-alt {
+  color: transparent;
+  user-select: none;
+}
+
 .ellipsis {
   overflow: hidden;
   white-space: nowrap;

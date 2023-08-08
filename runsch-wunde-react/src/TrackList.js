@@ -43,22 +43,22 @@ const Track = ({ track }) => {
 
 const TrackCover = () => {
   const track = useContext(TrackContext);
-  if (!track)
-    return (
-      <div className="image is-48x48">
-        <div className="loading" style={{ height: '100%' }} />
-      </div>
-    );
   const url = track?.album.images.find((image) => image.width <= 64)?.url;
   return (
     <div className="image is-48x48">
-      {track && (
+      {track ? (
         <img
-          className="cover"
+          className="cover loading hide-alt"
           src={url}
           alt={`Album cover of ${track.album.name}`}
           title={track.album.name}
           draggable="false"
+        />
+      ) : (
+        <div
+          className="loading"
+          title="Loading..."
+          style={{ height: '100%' }}
         />
       )}
     </div>
@@ -68,7 +68,13 @@ const TrackCover = () => {
 const TrackName = () => {
   const track = useContext(TrackContext);
   if (!track)
-    return <p className="text-placeholder" style={{ '--length': 23 }} />;
+    return (
+      <p
+        className="text-placeholder"
+        title="Loading..."
+        style={{ '--length': 23 }}
+      />
+    );
   return (
     <p className="ellipsis" title={track.name}>
       <b>{track.name}</b>
@@ -92,7 +98,13 @@ const TrackExplicity = () => {
 const TrackArtists = () => {
   const track = useContext(TrackContext);
   if (!track)
-    return <p className="text-placeholder" style={{ '--length': 18 }} />;
+    return (
+      <p
+        className="text-placeholder"
+        title="Loading..."
+        style={{ '--length': 18 }}
+      />
+    );
   const artists = track.artists.map((artist) => artist.name).join(', ');
   return (
     <span className="ellipsis" title={artists}>
@@ -104,7 +116,13 @@ const TrackArtists = () => {
 const TrackAlbum = () => {
   const track = useContext(TrackContext);
   if (!track)
-    return <p className="text-placeholder" style={{ '--length': 25 }} />;
+    return (
+      <p
+        className="text-placeholder"
+        title="Loading..."
+        style={{ '--length': 25 }}
+      />
+    );
   return (
     <p className="ellipsis" title={track.album.name}>
       {track.album.name}
@@ -115,7 +133,13 @@ const TrackAlbum = () => {
 const TrackRelease = () => {
   const track = useContext(TrackContext);
   if (!track)
-    return <p className="text-placeholder" style={{ '--length': 4 }} />;
+    return (
+      <p
+        className="text-placeholder"
+        title="Loading..."
+        style={{ '--length': 4 }}
+      />
+    );
   const year = new Date(track.album.release_date).getFullYear();
   return (
     <p className="has-text-grey ellipsis" title={year}>
@@ -127,7 +151,13 @@ const TrackRelease = () => {
 const TrackDuration = () => {
   const track = useContext(TrackContext);
   if (!track)
-    return <p className="text-placeholder ml-auto" style={{ '--length': 4 }} />;
+    return (
+      <p
+        className="text-placeholder ml-auto"
+        title="Loading..."
+        style={{ '--length': 4 }}
+      />
+    );
   const dur = new Date(track.duration_ms);
   return (
     <p className="has-text-right">
