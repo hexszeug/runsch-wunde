@@ -1,4 +1,6 @@
 import { createContext, useContext } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const TrackContext = createContext(null);
 
@@ -19,6 +21,7 @@ const Track = ({ track }) => {
         <div className="columns is-vcentered is-mobile">
           <div className="column is-narrow">
             <TrackCover />
+            <AddToQueueIcon />
           </div>
           <div className="column is-clipped">
             <TrackName />
@@ -45,7 +48,7 @@ const TrackCover = () => {
   const track = useContext(TrackContext);
   const url = track?.album.images.find((image) => image.width <= 64)?.url;
   return (
-    <div className="image cover is-48x48">
+    <div className={`image cover is-48x48 ${track ? 'hover-hide' : ''}`}>
       {track ? (
         <img
           className="loading hide-alt"
@@ -61,6 +64,16 @@ const TrackCover = () => {
           style={{ height: '100%' }}
         />
       )}
+    </div>
+  );
+};
+
+const AddToQueueIcon = () => {
+  const track = useContext(TrackContext);
+  if (!track) return;
+  return (
+    <div className="image cover is-48x48 hover-show is-relative">
+      <FontAwesomeIcon className="center-absolute" icon={faPlus} size="xl" />
     </div>
   );
 };
