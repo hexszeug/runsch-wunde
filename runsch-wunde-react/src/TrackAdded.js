@@ -29,19 +29,13 @@ const TrackAdded = ({ track }) => {
           />
         </div>
       </div>
-      <div className="block">
+      <div className="block p-5">
         <p className="has-text-centered is-size-5 is-size-3-widescreen">
-          Added <b>{track.name}</b>
-          <br />
-          to <b>{4}th place</b> in the queue,
-          <br />
-          playing in <b>{'15:21'}</b>
+          Added <b>{track.name}</b> to <b>{4}th place</b> in the queue, playing
+          in <b>{'15:21'}</b>
         </p>
         <p className="has-text-centered is-size-5 is-size-3-widescreen">
-          <b>{track.name}</b> already
-          <br />
-          in <b>{4}th place</b> in the queue,
-          <br />
+          <b>{track.name}</b> already in <b>{4}th place</b> in the queue,
           playing in <b>{'15:21'}</b>
         </p>
       </div>

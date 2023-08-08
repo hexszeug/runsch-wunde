@@ -25,19 +25,13 @@
 
   aspect-ratio: 1;
 
-  width: 450px;
-
-  @include widescreen {
-    width: 640px;
-  }
-
-  @include touch {
-    width: min(300px, 100%);
-  }
+  width: min(300px, 100%);
 
   @media screen and (max-height: 499px) {
     display: none;
   }
+
+  box-shadow: $card-shadow;
 }
 
 .image.cover img {
