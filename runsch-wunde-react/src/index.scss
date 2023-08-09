@@ -5,6 +5,10 @@
 //todo import only the bulma parts needed
 @import '~bulma/bulma';
 
+.no-select {
+  user-select: none;
+}
+
 .hoverable {
   &:hover {
     background-color: $white-ter;

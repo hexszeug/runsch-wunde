@@ -8,8 +8,8 @@ const TrackContext = createContext(null);
 const TrackList = ({ tracks }) => {
   return (
     <div>
-      {tracks.map((track) => (
-        <Track track={track} key={track ? track.id : Math.random()} />
+      {tracks.map((track, i) => (
+        <Track track={track} key={track ? track.id : i} />
       ))}
     </div>
   );

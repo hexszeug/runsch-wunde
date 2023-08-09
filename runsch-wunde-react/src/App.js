@@ -1,6 +1,9 @@
 import TrackAdded, { useTrackAdded } from './TrackAdded';
 import TrackList from './TrackList';
 import { testList, testPlayback } from './testData';
+import { useCallback, useState } from 'react';
+import Search from './Search';
+import Navbar from './Navbar';
 
 function App() {
   const [trackAdded, trackAddedData, showTrackAdded] = useTrackAdded();
@@ -11,18 +14,26 @@ function App() {
       playback: testPlayback,
     });
   };
+  const [query, setQuery] = useState('');
+  const handleQueryChange = useCallback((e) => setQuery(e.target.value), []);
   return (
     <>
-      {trackAdded && <TrackAdded data={trackAddedData} />}
-      <div className="container">
-        <div className="field">
-          <label className="label">Search</label>
-          <div className="control">
-            <input className="input" type="text" placeholder="Typing..." />
+      <section className="section">
+        <Navbar />
+      </section>
+      <section className="section">
+        <main className="container">
+          <div className="block">
+            <Search value={query} onChange={handleQueryChange} />
           </div>
-        </div>
-        <TrackList tracks={testList.concat(null)} />
-      </div>
+          {query !== '' && (
+            <div className="block">
+              <TrackList tracks={testList.concat(null)} />
+            </div>
+          )}
+        </main>
+      </section>
+      {trackAdded && <TrackAdded data={trackAddedData} />}
     </>
   );
 }
