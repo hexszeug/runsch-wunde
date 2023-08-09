@@ -1,8 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { extractColorForBackground } from './colors';
 import { msToHMS } from './time';
 
-const TrackAdded = ({ track, queue, playback }) => {
+const OVERLAY_TIME_MS = 7000;
+
+export const useTrackAdded = () => {
+  const [{ timeout, track, queue, playback }, setData] = useState({});
+  const showTrackAdded = useCallback(({ track, queue, playback }) => {
+    const timeout = setTimeout(() => {
+      setData({});
+    }, OVERLAY_TIME_MS);
+    setData({ timeout, track, queue, playback });
+  }, []);
+  useEffect(() => () => clearTimeout(timeout), [timeout]);
+  return [Boolean(timeout), { track, queue, playback }, showTrackAdded];
+};
+
+const TrackAdded = ({ data: { track, queue, playback } }) => {
   const [backgroundColor, setBackgroundColor] = useState(null);
   const coverRef = useRef(null);
   const handleLoad = (e) => {

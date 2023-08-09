@@ -1,6 +1,6 @@
 import ColorThief from 'colorthief/dist/color-thief.mjs';
 
-const LIGHT_LIGHTNESS = 65;
+const MIN_LIGHTNESS = 65;
 
 const colorThief = new ColorThief();
 
@@ -8,9 +8,9 @@ export const extractColor = (image) => colorThief.getColor(image);
 
 export const extractColorForBackground = (image) => {
   const color = extractColor(image);
-  return lightnessOf(color) >= LIGHT_LIGHTNESS
+  return lightnessOf(color) >= MIN_LIGHTNESS
     ? color
-    : enlightened(color, LIGHT_LIGHTNESS);
+    : enlightened(color, MIN_LIGHTNESS);
 };
 
 const lightnessOf = (color) =>

@@ -1,15 +1,19 @@
-import TrackAdded from './TrackAdded';
+import TrackAdded, { useTrackAdded } from './TrackAdded';
 import TrackList from './TrackList';
 import { testList, testPlayback } from './testData';
 
 function App() {
+  const [trackAdded, trackAddedData, showTrackAdded] = useTrackAdded();
+  window.testOverlay = () => {
+    showTrackAdded({
+      track: testList[Math.floor(Math.random() * testList.length)],
+      queue: testList,
+      playback: testPlayback,
+    });
+  };
   return (
     <>
-      <TrackAdded
-        track={testList[0]}
-        queue={testList}
-        playback={testPlayback}
-      />
+      {trackAdded && <TrackAdded data={trackAddedData} />}
       <div className="container">
         <div className="field">
           <label className="label">Search</label>
