@@ -4,6 +4,7 @@ import { testList, testPlayback } from './testData';
 import { useCallback, useState } from 'react';
 import Search from './Search';
 import Navbar from './Navbar';
+import Footer from './Footer';
 
 function App() {
   const [trackAdded, trackAddedData, showTrackAdded] = useTrackAdded();
@@ -33,6 +34,7 @@ function App() {
           )}
         </main>
       </section>
+      {query === '' && <Footer />}
       {trackAdded && <TrackAdded data={trackAddedData} />}
     </>
   );
