@@ -9,7 +9,7 @@ const TrackList = ({ tracks }) => {
   return (
     <div>
       {tracks.map((track) => (
-        <Track track={track} key={track?.id} />
+        <Track track={track} key={track ? track.id : Math.random()} />
       ))}
     </div>
   );
@@ -30,10 +30,7 @@ const Track = ({ track }) => {
           </div>
           <div className="column is-clipped">
             <TrackName />
-            <p className="vcentered">
-              <TrackExplicity />
-              <TrackArtists />
-            </p>
+            <TrackExplicityAndArtists />
           </div>
           <div className="column is-clipped is-hidden-mobile">
             <TrackAlbum />
@@ -100,6 +97,22 @@ const TrackName = () => {
   );
 };
 
+const TrackExplicityAndArtists = () => {
+  const track = useContext(TrackContext);
+  return track ? (
+    <p className="vcentered">
+      <TrackExplicity />
+      <TrackArtists />
+    </p>
+  ) : (
+    <p
+      className="text-placeholder"
+      title="Loading..."
+      style={{ '--length': 18 }}
+    />
+  );
+};
+
 const TrackExplicity = () => {
   const track = useContext(TrackContext);
   if (!track?.explicit) return;
@@ -115,14 +128,7 @@ const TrackExplicity = () => {
 
 const TrackArtists = () => {
   const track = useContext(TrackContext);
-  if (!track)
-    return (
-      <p
-        className="text-placeholder"
-        title="Loading..."
-        style={{ '--length': 18 }}
-      />
-    );
+  if (!track) return;
   const artists = track.artists.map((artist) => artist.name).join(', ');
   return (
     <span className="ellipsis" title={artists}>
