@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react';
 import Search from './Search';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import Login from './Login';
 
 function App() {
   const [trackAdded, trackAddedData, showTrackAdded] = useTrackAdded();
@@ -24,6 +25,7 @@ function App() {
       </section>
       <section className="section">
         <main className="container">
+          <Login />
           <div className="block">
             <Search value={query} onChange={handleQueryChange} />
           </div>
