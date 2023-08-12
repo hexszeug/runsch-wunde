@@ -41,7 +41,7 @@ export const redirectToLogin = async () => {
   window.location = 'https://accounts.spotify.com/authorize?' + query;
 };
 
-const handleQuery = async () => {
+const handleQuery = () => {
   const query = new URLSearchParams(window.location.search);
 
   // check if waiting for code
@@ -55,11 +55,12 @@ const handleQuery = async () => {
   // request is verified and should contain the code
   sessionStorage.removeItem('state');
   sessionStorage.removeItem('code_verifier');
-  const code = extractCode(query);
-  await fetchAndStoreAccessToken(code, codeVerifier);
+  return extractCode(query).then((code) =>
+    fetchAndStoreAccessToken(code, codeVerifier)
+  );
 };
 
-const extractCode = (query) => {
+const extractCode = async (query) => {
   if (query.has('error'))
     throw new Error(`authorization failed: ${query.get('error')}`);
   if (!query.has('code')) throw new Error('missing authorization code');
@@ -93,23 +94,51 @@ const fetchAndStoreAccessToken = async (code, codeVerifier) => {
   // set access and refresh token
   window.sessionStorage.setItem('access_token', data.access_token);
   window.sessionStorage.setItem('refresh_token', data.refresh_token);
-  // todo make access token available to application
-  // make state available to application (logged out / logging in / logged in)
 };
 
 /************************************************************/
 
-window.sessionStorage.getItem('access_token');
-window.sessionStorage.getItem('refresh_token');
-// todo make access token available to application
-// make state available to application (logged out / logging in / logged in)
+export const tokens = {
+  accessToken: null,
+  refreshToken: null,
+};
+
+export const appState = {
+  current: 'login',
+  subscriptions: new Set(),
+  getSnapshot: () => appState.current,
+  subscribe: (callback) => {
+    appState.subscriptions.add(callback);
+    return () => appState.subscriptions.delete(callback);
+  },
+  update: (value) => {
+    if (value === appState.current) return;
+    appState.current = value;
+    appState.subscriptions.forEach((callback) => callback());
+  },
+};
+
+/*************************************************************/
 
 if (window.location.search) {
-  try {
-    await handleQuery();
-  } catch (e) {
-    console.error('uncaught error while authorizing:', e);
-  } finally {
-    window.history.replaceState(null, '', REDIRECT_URI);
+  const processingQuery = handleQuery();
+  if (processingQuery) {
+    appState.update('loading');
+    try {
+      await processingQuery;
+    } catch (e) {
+      console.error('uncaught error while authorizing:', e);
+    } finally {
+      window.history.replaceState(null, '', REDIRECT_URI);
+    }
   }
+}
+
+tokens.accessToken = window.sessionStorage.getItem('access_token');
+tokens.refreshToken = window.sessionStorage.getItem('refresh_token');
+
+if (tokens.accessToken && tokens.refreshToken) {
+  appState.update('normal');
+} else {
+  appState.update('login');
 }

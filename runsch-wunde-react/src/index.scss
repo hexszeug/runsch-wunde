@@ -115,3 +115,7 @@ p.text-placeholder {
   display: flex;
   flex-direction: column;
 }
+
+.test {
+  @extend %loader;
+}
