@@ -68,20 +68,38 @@ const extractCode = async (query) => {
 };
 
 const fetchAndStoreAccessToken = async (code, codeVerifier) => {
-  // request
-  const req = new URLSearchParams({
+  const body = new URLSearchParams({
     grant_type: 'authorization_code',
     code,
     redirect_uri: REDIRECT_URI,
     client_id: CLIENT_ID,
     code_verifier: codeVerifier,
   });
+  const data = await requestAuthApi(body);
+
+  window.sessionStorage.setItem('access_token', data.access_token);
+  window.sessionStorage.setItem('refresh_token', data.refresh_token);
+};
+
+const refreshAndStoreAccessToken = async () => {
+  const body = new URLSearchParams({
+    grant_type: 'refresh_token',
+    refresh_token: tokens.refreshToken,
+    client_id: CLIENT_ID,
+  });
+  const data = await requestAuthApi(body);
+
+  tokens.accessToken = data.access_token;
+  window.sessionStorage.setItem('access_token', data.access_token);
+};
+
+const requestAuthApi = async (body) => {
   const res = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: req,
+    body,
   });
 
   // handle errors in response
@@ -91,9 +109,7 @@ const fetchAndStoreAccessToken = async (code, codeVerifier) => {
       `token creation failed (${res.status} ${res.statusText}): ${data.error} (${data.error_description})`
     );
 
-  // set access and refresh token
-  window.sessionStorage.setItem('access_token', data.access_token);
-  window.sessionStorage.setItem('refresh_token', data.refresh_token);
+  return data;
 };
 
 /************************************************************/
@@ -142,3 +158,5 @@ if (tokens.accessToken && tokens.refreshToken) {
 } else {
   appState.update('login');
 }
+
+window.testRefresh = refreshAndStoreAccessToken; // todo remove debug
