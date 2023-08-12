@@ -1,44 +1,23 @@
-import TrackAdded, { useTrackAdded } from './TrackAdded';
-import TrackList from './TrackList';
-import { testList, testPlayback } from './testData';
-import { useCallback, useState } from 'react';
-import Search from './Search';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Login from './Login';
+import Main from './Main';
 
 function App() {
-  const [trackAdded, trackAddedData, showTrackAdded] = useTrackAdded();
-  window.testOverlay = () => {
-    showTrackAdded({
-      track: testList[Math.floor(Math.random() * testList.length)],
-      queue: testList,
-      playback: testPlayback,
-    });
-  };
-  const [query, setQuery] = useState('');
-  const handleQueryChange = useCallback((e) => setQuery(e.target.value), []);
   return (
-    <>
+    <div className="viewport">
       <section className="section">
         <Navbar />
       </section>
       <section className="section">
-        <main className="container">
-          <Login />
-          <div className="block">
-            <Search value={query} onChange={handleQueryChange} />
-          </div>
-          {query !== '' && (
-            <div className="block">
-              <TrackList tracks={testList.concat(null)} />
-            </div>
-          )}
-        </main>
+        <Login />
+        <Main />
       </section>
-      {query === '' && <Footer />}
-      {trackAdded && <TrackAdded data={trackAddedData} />}
-    </>
+      {/* explicitly not .section (no margins on the footer)*/}
+      <section className="mt-auto">
+        <Footer />
+      </section>
+    </div>
   );
 }
 
