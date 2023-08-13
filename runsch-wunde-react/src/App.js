@@ -14,7 +14,6 @@ function App() {
       </section>
       <section className="section">
         {state === 'login' && <Login />}
-        {state === 'loading' && <div className="test"></div>}
         {state === 'normal' && <Main />}
       </section>
       {/* explicitly not .section (no margins on the footer)*/}

@@ -1,5 +1,5 @@
 const CLIENT_ID = '47581a90bfe64f069d2bf0aa54d3de9a';
-const SCOPES = ['user-read-playback-state'];
+const SCOPES = ['user-read-playback-state', 'user-modify-playback-state'];
 const REDIRECT_URI = window.location.origin + window.location.pathname;
 
 const base64urlEncode = (bytes) =>
@@ -81,7 +81,7 @@ const fetchAndStoreAccessToken = async (code, codeVerifier) => {
   window.sessionStorage.setItem('refresh_token', data.refresh_token);
 };
 
-const refreshAndStoreAccessToken = async () => {
+export const refreshAndStoreAccessToken = async () => {
   const body = new URLSearchParams({
     grant_type: 'refresh_token',
     refresh_token: tokens.refreshToken,
