@@ -58,7 +58,7 @@ const AlbumCover = ({ track, onLoad, coverRef }) => {
 };
 
 const QueueInfo = ({ track, queue, playback }) => {
-  const queuePos = queue.findIndex(({ id }) => id === track.id) + 1;
+  const queuePos = queue.findIndex(({ uri }) => uri === track.uri) + 1;
   const currentTrackTime = track.duration_ms - playback.progress_ms;
   const queueTime = queue
     .slice(0, queuePos - 1)
@@ -71,7 +71,7 @@ const QueueInfo = ({ track, queue, playback }) => {
       }, 1000);
       return () => clearTimeout(timeout);
     }
-  }, [time, track.id]);
+  }, [time, track.uri]);
   return queuePos === queue.length ? (
     <p className="has-text-centered is-size-5 is-size-3-widescreen">
       Added <b>{track.name}</b> at <b>position {queuePos}</b> to the queue,

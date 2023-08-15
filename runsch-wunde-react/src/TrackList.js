@@ -1,32 +1,49 @@
-import { createContext, useContext } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { msToHMS } from './time';
 
 const TrackContext = createContext(null);
 
-const TrackList = ({ tracks }) => {
+const TrackList = ({ tracks, addToQueue }) => {
   return (
     <div>
       {tracks.map((track, i) => (
-        <Track track={track} key={track ? track.id : i} />
+        <Track
+          track={track}
+          key={track ? track.uri : i}
+          addToQueue={() => addToQueue(track)}
+        />
       ))}
     </div>
   );
 };
 
-const Track = ({ track }) => {
+const Track = ({ track, addToQueue }) => {
+  const [isLoading, setLoading] = useState(false);
+  const handleClick = useCallback(async () => {
+    setLoading(true);
+    await addToQueue();
+    setLoading(false);
+  }, [addToQueue]);
   return (
     <TrackContext.Provider value={track}>
       <div
         className={`hoverable p-3 is-unselectable ${
           track ? 'is-clickable' : ''
         }`}
+        onClick={track ? handleClick : null}
       >
         <div className="columns is-vcentered is-mobile">
           <div className="column is-narrow">
-            <TrackCover />
-            <AddToQueueIcon />
+            {isLoading ? (
+              <LoadingIcon />
+            ) : (
+              <>
+                <TrackCover />
+                <AddToQueueIcon />
+              </>
+            )}
           </div>
           <div className="column is-clipped">
             <TrackName />
@@ -74,8 +91,18 @@ const AddToQueueIcon = () => {
   const track = useContext(TrackContext);
   if (!track) return;
   return (
-    <div className="image cover is-48x48 hover-show is-relative">
+    <div className="image is-48x48 hover-show is-relative">
       <FontAwesomeIcon className="center-absolute" icon={faPlus} size="xl" />
+    </div>
+  );
+};
+
+const LoadingIcon = () => {
+  return (
+    <div className="image is-48x48 is-relative">
+      <div className="center-absolute">
+        <div className="loader" />
+      </div>
     </div>
   );
 };

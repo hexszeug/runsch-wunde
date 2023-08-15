@@ -1,5 +1,11 @@
 const CLIENT_ID = '47581a90bfe64f069d2bf0aa54d3de9a';
-const SCOPES = ['user-read-playback-state', 'user-modify-playback-state'];
+const SCOPES = [
+  'user-read-playback-state',
+  'user-modify-playback-state',
+  'playlist-read-private',
+  'playlist-modify-private',
+  'playlist-modify-public',
+];
 const REDIRECT_URI = window.location.origin + window.location.pathname;
 
 const base64urlEncode = (bytes) =>
@@ -143,6 +149,7 @@ if (window.location.search) {
     try {
       await processingQuery;
     } catch (e) {
+      // todo popup error message to user
       console.error('uncaught error while authorizing:', e);
     } finally {
       window.history.replaceState(null, '', REDIRECT_URI);
@@ -158,5 +165,3 @@ if (tokens.accessToken && tokens.refreshToken) {
 } else {
   appState.update('login');
 }
-
-window.testRefresh = refreshAndStoreAccessToken; // todo remove debug

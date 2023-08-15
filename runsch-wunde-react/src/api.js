@@ -37,6 +37,7 @@ const request = async (
   switch (status) {
     case 401:
       if (retries === 0) break;
+      console.warn('token expired, refreshing token and retrying');
       await refreshAndStoreAccessToken();
       return request(path, method, query, body, options, retries - 1);
     case 503:
@@ -44,7 +45,7 @@ const request = async (
       return request(path, method, query, body, options, retries - 1);
     default:
       throw new Error(
-        `api request failed (${status} ${statusText}): ${resBody.message}`
+        `api ${method} request to ${path} failed (${status} ${statusText}): ${resBody.message}`
       );
   }
 };
@@ -58,5 +59,27 @@ export const api = {
       limit: pagesize,
     });
     return body.tracks;
+  },
+  pushQueue: async (track) => {
+    await request('/me/player/queue', 'POST', { uri: track.uri });
+  },
+  playback: async () => {
+    return (await request('/me/player', 'GET')).body;
+  },
+  playlist: async (playlistId) => {
+    const {
+      body: { items },
+    } = await request(`/playlists/${playlistId}/tracks`, 'GET', {
+      fields: 'items(track(uri, duration_ms))',
+      limit: 50,
+      offset: 0,
+    });
+    return items.map(({ track }) => track);
+  },
+  unshiftPlaylist: async (playlistId, track) => {
+    await request(`/playlists/${playlistId}/tracks`, 'POST', {
+      uris: [track.uri],
+      position: 0,
+    });
   },
 };
