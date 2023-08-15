@@ -45,7 +45,7 @@ const request = async (
       return request(path, method, query, body, options, retries - 1);
     default:
       throw new Error(
-        `api ${method} request to ${path} failed (${status} ${statusText}): ${resBody.message}`
+        `api ${method} request to ${path} failed (${status} ${statusText}): ${resBody.error.message}`
       );
   }
 };
@@ -70,7 +70,7 @@ export const api = {
     const {
       body: { items },
     } = await request(`/playlists/${playlistId}/tracks`, 'GET', {
-      fields: 'items(track(uri, duration_ms))',
+      fields: 'items(track(uri,duration_ms))',
       limit: 50,
       offset: 0,
     });

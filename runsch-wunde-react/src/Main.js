@@ -32,21 +32,17 @@ const Main = () => {
         if (playlistId === null)
           throw new Error('illegal state: missing cache playlist');
         const loadingPlayback = api.playback();
-        const playlist = await api.playlist(playlistId);
-        if (!playlist.some(({ uri }) => uri === track.uri)) {
-          playlist.unshift(track);
+        const queue = await api.playlist(playlistId);
+        const isNew = !queue.some(({ uri }) => uri === track.uri);
+        if (isNew) {
+          queue.unshift(track);
           await Promise.all([
             api.pushQueue(track),
             api.unshiftPlaylist(playlistId, track),
           ]);
         }
         const playback = await loadingPlayback;
-        const currentIndex = playlist.findIndex(
-          ({ uri }) => uri === playback.item?.uri
-        );
-        const queue =
-          currentIndex === -1 ? [track] : playlist.slice(0, currentIndex);
-        showTrackAdded({ track, queue, playback });
+        showTrackAdded({ track, queue, playback, isNew });
       } catch (e) {
         // todo popup error message to user
         console.error('error while adding track to queue:', e);
