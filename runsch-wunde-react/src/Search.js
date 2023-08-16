@@ -4,12 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const Search = ({ value, onChange }) => {
   return (
     <div className="field">
-      <label className="label is-medium">Wish for a song</label>
+      <label className="label is-medium">Wünsche dir einen Song</label>
       <div className="control has-icons-left">
         <input
           className="input is-medium"
           type="text"
-          placeholder="Search"
+          placeholder="Suchen"
           value={value}
           onChange={onChange}
         />

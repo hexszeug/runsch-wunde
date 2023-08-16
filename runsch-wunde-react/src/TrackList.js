@@ -77,11 +77,7 @@ const TrackCover = () => {
           draggable="false"
         />
       ) : (
-        <div
-          className="loading"
-          title="Loading..."
-          style={{ height: '100%' }}
-        />
+        <div className="loading" title="Lädt..." style={{ height: '100%' }} />
       )}
     </div>
   );
@@ -113,7 +109,7 @@ const TrackName = () => {
     return (
       <p
         className="text-placeholder"
-        title="Loading..."
+        title="Lädt..."
         style={{ '--length': 23 }}
       />
     );
@@ -134,7 +130,7 @@ const TrackExplicityAndArtists = () => {
   ) : (
     <p
       className="text-placeholder"
-      title="Loading..."
+      title="Lädt..."
       style={{ '--length': 18 }}
     />
   );
@@ -170,7 +166,7 @@ const TrackAlbum = () => {
     return (
       <p
         className="text-placeholder"
-        title="Loading..."
+        title="Lädt..."
         style={{ '--length': 25 }}
       />
     );
@@ -187,7 +183,7 @@ const TrackRelease = () => {
     return (
       <p
         className="text-placeholder"
-        title="Loading..."
+        title="Lädt..."
         style={{ '--length': 4 }}
       />
     );
@@ -205,7 +201,7 @@ const TrackDuration = () => {
     return (
       <p
         className="text-placeholder ml-auto"
-        title="Loading..."
+        title="Lädt..."
         style={{ '--length': 4 }}
       />
     );

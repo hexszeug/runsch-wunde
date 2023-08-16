@@ -16,7 +16,7 @@ export const WithError = ({ children }) => {
 };
 
 const Error = ({ error: { message, close } }) => {
-  if (!message) message = 'Please notify the party host.';
+  if (!message) message = 'Bitte benachrichtige den Gastgeber.';
   useEffect(() => {
     const timeout = setTimeout(close, 10000);
     return () => clearTimeout(timeout);
@@ -24,7 +24,7 @@ const Error = ({ error: { message, close } }) => {
   return (
     <div className="message is-danger error">
       <div className="message-header">
-        <p>Error</p>
+        <p>Ein Fehler ist aufgetreten</p>
         <button className="delete" aria-label="delete" onClick={close} />
       </div>
       <div className="message-body">

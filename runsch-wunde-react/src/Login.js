@@ -9,14 +9,15 @@ const Login = () => {
           className="button is-large is-primary"
           onClick={redirectToLogin}
         >
-          <span>Connect to</span>
+          <span>Mit</span>
           <img
-            className="ml-2"
+            className="mx-2"
             src={spotifyLogo}
             alt="Spotify"
             draggable="false"
             width="120px"
           />
+          <span>verbinden</span>
         </button>
       </div>
     </div>

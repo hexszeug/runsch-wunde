@@ -84,13 +84,13 @@ const QueueInfo = ({ track, position, time: initialTime, isNew }) => {
     <p className="has-text-centered is-size-5 is-size-3-widescreen">
       {isNew ? (
         <>
-          Added <b>{track.name}</b> at <b>position {position}</b> to the queue,
-          playing in <b>{msToHMS(time)}</b>
+          <b>{track.name}</b> an <b>{position}. Stelle</b> zur Warteschlange
+          hinzugefügt, spielt in <b>{msToHMS(time)}</b>
         </>
       ) : (
         <>
-          <b>{track.name}</b> already at <b>position {position}</b> in the
-          queue, playing in <b>{msToHMS(time)}</b>
+          <b>{track.name}</b> schon an <b>{position}. Stelle</b> in der
+          Warteschlange, spielt in <b>{msToHMS(time)}</b>
         </>
       )}
     </p>
