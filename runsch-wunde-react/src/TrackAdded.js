@@ -5,18 +5,26 @@ import { msToHMS } from './time';
 const OVERLAY_TIME_MS = 7000;
 
 export const useTrackAdded = () => {
-  const [{ timeout, track, queue, playback, isNew }, setData] = useState({});
+  const [{ timeout, track, position, time, isNew }, setData] = useState({});
   const showTrackAdded = useCallback(({ track, queue, playback, isNew }) => {
     const timeout = setTimeout(() => {
       setData({});
     }, OVERLAY_TIME_MS);
-    setData({ timeout, track, queue, playback, isNew });
+    let time = playback.item.duration_ms - playback.progress_ms;
+    const position =
+      1 +
+      queue.toReversed().findIndex(({ uri, duration_ms }) => {
+        if (uri === track.uri) return true;
+        time += duration_ms;
+        return false;
+      });
+    setData({ timeout, track, position, time, isNew });
   }, []);
   useEffect(() => () => clearTimeout(timeout), [timeout]);
-  return [Boolean(timeout), { track, queue, playback, isNew }, showTrackAdded];
+  return [Boolean(timeout), { track, position, time, isNew }, showTrackAdded];
 };
 
-const TrackAdded = ({ data: { track, queue, playback, isNew } }) => {
+const TrackAdded = ({ data: { track, position, time, isNew } }) => {
   const [backgroundColor, setBackgroundColor] = useState(null);
   const coverRef = useRef(null);
   const handleLoad = (e) => {
@@ -36,8 +44,8 @@ const TrackAdded = ({ data: { track, queue, playback, isNew } }) => {
       <div className="block p-5">
         <QueueInfo
           track={track}
-          queue={queue}
-          playback={playback}
+          position={position}
+          time={time}
           isNew={isNew}
         />
       </div>
@@ -62,46 +70,26 @@ const AlbumCover = ({ track, onLoad, coverRef }) => {
   );
 };
 
-const QueueInfo = ({ track, queue, playback, isNew }) => {
-  const trackIndex = queue.findIndex(({ uri }) => uri === track.uri);
-  const playbackIndex = queue.findIndex(
-    ({ uri }) => uri === playback.item?.uri
-  );
-  const trackPos =
-    playbackIndex === -1 ? trackIndex + 1 : playbackIndex - trackIndex;
-  const queueTime =
-    playbackIndex === -1
-      ? 0
-      : queue
-          .slice(trackIndex + 1, playbackIndex)
-          .reduce((sum, { duration_ms }) => sum + duration_ms, 0);
-  const playbackTime = !playback.item
-    ? 0
-    : playback.item.duration_ms - playback.progress_ms;
-  const [time, setTime] = useState(queueTime + playbackTime);
+const QueueInfo = ({ track, position, time: initialTime, isNew }) => {
+  const [time, setTime] = useState(initialTime);
   useEffect(() => {
-    if (time > 0 && playback.is_playing) {
+    if (time > 0) {
       const timeout = setTimeout(() => {
         setTime(Math.max(time - 1000, 0));
       }, 1000);
       return () => clearTimeout(timeout);
     }
-  }, [time, playback.is_playing, track.uri]);
+  }, [time, track.uri]);
   return (
     <p className="has-text-centered is-size-5 is-size-3-widescreen">
       {isNew ? (
         <>
-          Added <b>{track.name}</b> at <b>position {trackPos}</b> to the queue,
+          Added <b>{track.name}</b> at <b>position {position}</b> to the queue,
           playing in <b>{msToHMS(time)}</b>
-        </>
-      ) : trackIndex >= playbackIndex ? (
-        <>
-          <b>{track.name}</b> has already been played, but you can wish for
-          another song.
         </>
       ) : (
         <>
-          <b>{track.name}</b> already at <b>position {trackPos}</b> in the
+          <b>{track.name}</b> already at <b>position {position}</b> in the
           queue, playing in <b>{msToHMS(time)}</b>
         </>
       )}

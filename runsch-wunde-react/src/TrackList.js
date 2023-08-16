@@ -191,7 +191,7 @@ const TrackRelease = () => {
         style={{ '--length': 4 }}
       />
     );
-  const year = new Date(track.album.release_date).getFullYear();
+  const year = new Date(track.album.release_date).getUTCFullYear();
   return (
     <p className="has-text-grey ellipsis" title={year}>
       {year}

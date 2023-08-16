@@ -31,18 +31,44 @@ const Main = () => {
         const playlistId = window.localStorage.getItem('cache_playlist');
         if (playlistId === null)
           throw new Error('illegal state: missing cache playlist');
-        const loadingPlayback = api.playback();
-        const queue = await api.playlist(playlistId);
-        const isNew = !queue.some(({ uri }) => uri === track.uri);
-        if (isNew) {
+
+        // fetch queue cache and playback
+        const [cache, playback] = await Promise.all([
+          api.playlist(playlistId, 'items(added_at,track(uri,duration_ms))'),
+          api.playback(),
+        ]);
+        if (!playback.item) {
+          throw new Error('playback is not active');
+        }
+
+        // calculate part of cache which hasn't been played yet
+        const songStart = playback.timestamp - playback.progress_ms - 12000; // 12 secs buffer for delay between add to queue and to cache
+        // oldest song in the cache which hasn't been played yet
+        const nextPlayingIndex = cache.findLastIndex(
+          ({ added_at }, i, cache) => {
+            return (
+              cache[i + 1]?.uri === playback.item.uri ||
+              Date.parse(added_at) > songStart
+            );
+          }
+        );
+        // -1 as nextPlayingIndex is correctly handled
+        const queue = cache
+          .slice(0, nextPlayingIndex + 1)
+          .map(({ track }) => track);
+
+        // potentially add song
+        const alreadyInQueue = queue.some(({ uri }) => uri === track.uri);
+        if (!alreadyInQueue) {
           queue.unshift(track);
           await Promise.all([
             api.pushQueue(track),
             api.unshiftPlaylist(playlistId, track),
           ]);
         }
-        const playback = await loadingPlayback;
-        showTrackAdded({ track, queue, playback, isNew });
+
+        // show message to user
+        showTrackAdded({ track, queue, playback, isNew: !alreadyInQueue });
       } catch (e) {
         // todo popup error message to user
         console.error('error while adding track to queue:', e);

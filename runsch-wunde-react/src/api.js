@@ -66,15 +66,15 @@ export const api = {
   playback: async () => {
     return (await request('/me/player', 'GET')).body;
   },
-  playlist: async (playlistId) => {
+  playlist: async (playlistId, fields) => {
     const {
       body: { items },
     } = await request(`/playlists/${playlistId}/tracks`, 'GET', {
-      fields: 'items(track(uri,duration_ms))',
+      fields,
       limit: 50,
       offset: 0,
     });
-    return items.map(({ track }) => track);
+    return items;
   },
   unshiftPlaylist: async (playlistId, track) => {
     await request(`/playlists/${playlistId}/tracks`, 'POST', {
