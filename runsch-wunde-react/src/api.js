@@ -1,4 +1,4 @@
-import { refreshAndStoreAccessToken, tokens } from './auth';
+import { refreshAndStoreAccessToken, refreshTokenMutex, tokens } from './auth';
 
 const BASE_URL = 'https://api.spotify.com/v1';
 
@@ -10,6 +10,7 @@ const request = async (
   options = {},
   retries = 1
 ) => {
+  if (refreshTokenMutex.locked) await refreshTokenMutex.lock;
   const search = query ? '?' + new URLSearchParams(query) : '';
   const url = BASE_URL + path + search;
   const res = await fetch(url, {

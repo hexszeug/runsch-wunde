@@ -87,17 +87,41 @@ const fetchAndStoreAccessToken = async (code, codeVerifier) => {
   window.sessionStorage.setItem('refresh_token', data.refresh_token);
 };
 
-export const refreshAndStoreAccessToken = async () => {
-  const body = new URLSearchParams({
-    grant_type: 'refresh_token',
-    refresh_token: tokens.refreshToken,
-    client_id: CLIENT_ID,
-  });
-  const data = await requestAuthApi(body);
-
-  tokens.accessToken = data.access_token;
-  window.sessionStorage.setItem('access_token', data.access_token);
+export const refreshTokenMutex = {
+  locked: false,
+  lock: new Promise((res) => res()),
 };
+
+export const refreshAndStoreAccessToken = async () => {
+  if (refreshTokenMutex.locked) {
+    await refreshTokenMutex.lock;
+    return;
+  }
+  let resolve, reject;
+  refreshTokenMutex.lock = new Promise(
+    (res, rej) => ([resolve, reject] = [res, rej])
+  );
+  refreshTokenMutex.locked = true;
+  try {
+    const body = new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: tokens.refreshToken,
+      client_id: CLIENT_ID,
+    });
+    const data = await requestAuthApi(body);
+
+    tokens.accessToken = data.access_token;
+    window.sessionStorage.setItem('access_token', data.access_token);
+    refreshTokenMutex.locked = false;
+    resolve();
+  } catch (e) {
+    refreshTokenMutex.locked = false;
+    reject(e);
+    throw e;
+  }
+};
+
+window.forceTokenRefresh = refreshAndStoreAccessToken;
 
 const requestAuthApi = async (body) => {
   const res = await fetch('https://accounts.spotify.com/api/token', {
