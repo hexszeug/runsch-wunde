@@ -30,9 +30,7 @@ const Main = () => {
   const addToQueue = useCallback(
     async (track) => {
       try {
-        const playlistId = window.localStorage.getItem('cache_playlist');
-        if (playlistId === null)
-          throw new Error('illegal state: missing cache playlist');
+        const playlistId = '5jPk5phURQcuu17s5twd54';
 
         // fetch queue cache and playback
         const [cache, playback] = await Promise.all([
