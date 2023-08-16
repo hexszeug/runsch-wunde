@@ -1,8 +1,9 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useContext, useRef, useState } from 'react';
 import Search from './Search';
 import TrackAdded, { useTrackAdded } from './TrackAdded';
 import TrackList from './TrackList';
 import { api } from './api';
+import { ErrorContext } from './Error';
 
 const Main = () => {
   // search
@@ -25,6 +26,7 @@ const Main = () => {
 
   // add to queue
   const [trackAdded, trackAddedData, showTrackAdded] = useTrackAdded();
+  const showError = useContext(ErrorContext);
   const addToQueue = useCallback(
     async (track) => {
       try {
@@ -70,13 +72,13 @@ const Main = () => {
         // show message to user
         showTrackAdded({ track, queue, playback, isNew: !alreadyInQueue });
       } catch (e) {
-        // todo popup error message to user
+        showError();
         console.error('error while adding track to queue:', e);
       } finally {
         setQuery('');
       }
     },
-    [showTrackAdded]
+    [showTrackAdded, showError]
   );
   return (
     <main className="container">

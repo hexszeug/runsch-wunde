@@ -119,3 +119,9 @@ p.text-placeholder {
 .loader {
   @extend %loader;
 }
+
+.error {
+  position: fixed;
+  top: 2rem;
+  right: 4rem;
+}
