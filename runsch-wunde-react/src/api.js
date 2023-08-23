@@ -84,3 +84,36 @@ export const api = {
     });
   },
 };
+
+const reverse = async () => {
+  const playlistId = localStorage.getItem('cache_playlist');
+  const {
+    body: {
+      snapshot_id: initialSnapshotId,
+      tracks: { total },
+    },
+  } = await request(`/playlists/${playlistId}`, 'GET', {
+    fields: 'snapshot_id,tracks.total',
+  });
+  let snapshotId = initialSnapshotId;
+  for (let i = 1; i < total; i++) {
+    console.log(`trying to move track ${i} to 0`);
+    snapshotId = (
+      await request(
+        `/playlists/${playlistId}/tracks`,
+        'PUT',
+        {},
+        JSON.stringify({
+          range_start: i,
+          insert_before: 0,
+          range_length: 1,
+          snapshot_id: snapshotId,
+        }),
+        { headers: { 'Content-Type': 'application/json' } }
+      )
+    ).body.snapshot_id;
+    console.log('moved');
+  }
+};
+
+window.reverse = reverse;
